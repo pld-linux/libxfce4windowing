@@ -75,10 +75,10 @@ Development files for the libxfce4windowing library.
 Pliki nagłówkowe biblioteki libxfce4windowing.
 
 %package static
-Summary:        Static libxfce4windowing library
-Summary(pl.UTF-8):      Statyczna biblioteka libxfce4windowing
-Group:          Development/Libraries
-Requires:       %{name}-devel = %{version}-%{release}
+Summary:	Static libxfce4windowing library
+Summary(pl.UTF-8):	Statyczna biblioteka libxfce4windowing
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static libxfce4util library.
@@ -87,11 +87,11 @@ Static libxfce4util library.
 Statyczna biblioteka libxfce4util.
 
 %package apidocs
-Summary:        libxfce4windowing API documentation
-Summary(pl.UTF-8):      Dokumentacja API libxfce4util
-Group:          Documentation
-Requires:       gtk-doc-common
-BuildArch:      noarch
+Summary:	libxfce4windowing API documentation
+Summary(pl.UTF-8):	Dokumentacja API libxfce4util
+Group:		Documentation
+Requires:	gtk-doc-common
+BuildArch:	noarch
 
 %description apidocs
 libxfce4util API documentation.
