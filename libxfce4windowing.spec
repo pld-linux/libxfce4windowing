@@ -13,19 +13,18 @@ Group:		Libraries
 Source0:	https://archive.xfce.org/src/xfce/libxfce4windowing/4.20/%{name}-%{version}.tar.bz2
 # Source0-md5:	af2e712b5ad37e2c30597a5b0f1f7778
 URL:		https://docs.xfce.org/xfce/libxfce4windowing/start
-BuildRequires:	autoconf >= 2.50
-BuildRequires:	automake >= 1:1.8
+BuildRequires:	autoconf >= 2.69
+BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd412-xml
-BuildRequires:	gdk-pixbuf2-devel >= 2.40.8
-BuildRequires:	gettext-tools
+BuildRequires:	gdk-pixbuf2-devel >= 2.42.8
+BuildRequires:	gettext-tools >= 0.19.8
 BuildRequires:	glib2-devel >= 1:2.72.0
-BuildRequires:	gobject-introspection-devel >= 1.66.0
+BuildRequires:	gobject-introspection-devel >= 1.72.0
 BuildRequires:	gtk+3-devel >= 3.24.10
 %{?with_apidocs:BuildRequires:	gtk-doc >= 1.30}
 BuildRequires:	gtk-doc-automake >= 1.30
-BuildRequires:	intltool >= 0.35.0
 BuildRequires:	libdisplay-info-devel >= 0.1.1
-BuildRequires:	libtool >= 2:2.2.6
+BuildRequires:	libtool >= 2:2.4
 BuildRequires:	libwnck-devel >= 3.14
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig >= 1:0.9.0
@@ -36,7 +35,12 @@ BuildRequires:	wayland-protocols >= 1.25
 BuildRequires:	xfce4-dev-tools >= 4.20.0
 BuildRequires:	xorg-lib-libX11-devel >= 1.6.7
 BuildRequires:	xorg-lib-libXrandr-devel >= 1.5.0
+Requires:	gdk-pixbuf2 >= 2.42.8
 Requires:	glib2 >= 1:2.72.0
+Requires:	gtk+3 >= 3.24.10
+Requires:	libdisplay-info >= 0.1.1
+Requires:	libwnck >= 3.14
+Requires:	wayland >= 1.20
 Requires:	xfce4-dirs >= 4.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -67,6 +71,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libxfce4util
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.72.0
+Requires:	gtk+3-devel >= 3.24.10
 
 %description devel
 Development files for the libxfce4windowing library.
@@ -145,12 +150,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc NEWS README.md
+%attr(755,root,root) %{_libdir}/libxfce4windowing-0.so.*.*.*
+%ghost %{_libdir}/libxfce4windowing-0.so.0
+%attr(755,root,root) %{_libdir}/libxfce4windowingui-0.so.*.*.*
+%ghost %{_libdir}/libxfce4windowingui-0.so.0
 %{_libdir}/girepository-1.0/Libxfce4windowing-0.0.typelib
 %{_libdir}/girepository-1.0/Libxfce4windowingui-0.0.typelib
-%ghost %{_libdir}/libxfce4windowing-0.so.0
-%attr(755,root,root) %{_libdir}/libxfce4windowing-0.so.*.*.*
-%ghost %{_libdir}/libxfce4windowingui-0.so.0
-%attr(755,root,root) %{_libdir}/libxfce4windowingui-0.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
@@ -175,6 +180,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with apidocs}
 %files apidocs
 %defattr(644,root,root,755)
-%{_gtkdocdir}/%{name}
+%{_gtkdocdir}/libxfce4windowing
 %{_gtkdocdir}/libxfce4windowingui
 %endif
