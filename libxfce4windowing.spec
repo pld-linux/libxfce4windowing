@@ -1,20 +1,19 @@
 #
 # Conditional build:
+# TODO - Fix apidocs
 %bcond_without  apidocs         # gtk-doc documentation
 %bcond_with     static_libs     # static library
 
 Summary:	Windowing concept abstraction library for X11 and Wayland
 Summary(pl.UTF-8):	Biblioteka abstrakcji koncepcji okien dla X11 i Wayland
 Name:		libxfce4windowing
-Version:	4.20.2
-Release:	2
+Version:	4.20.3
+Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://archive.xfce.org/src/xfce/libxfce4windowing/4.20/%{name}-%{version}.tar.bz2
-# Source0-md5:	d3094d3fd6f3cdbc99b921a515c141e0
+# Source0-md5:	4d075b3ddd7be02d91041ff90aa049a3
 URL:		https://docs.xfce.org/xfce/libxfce4windowing/start
-BuildRequires:	autoconf >= 2.69
-BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	gdk-pixbuf2-devel >= 2.42.8
 BuildRequires:	gettext-tools >= 0.19.8
@@ -26,6 +25,8 @@ BuildRequires:	gtk-doc-automake >= 1.30
 BuildRequires:	libdisplay-info-devel >= 0.1.1
 BuildRequires:	libtool >= 2:2.4
 BuildRequires:	libwnck-devel >= 3.14
+BuildRequires:	meson >= 0.57.0
+BuildRequires:	ninja
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	rpm-build >= 4.6
@@ -108,33 +109,29 @@ Dokumentacja API libxfce4util.
 %setup -q
 
 %build
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__automake}
-%{__autoheader}
-%{__autoconf}
-%configure \
-	--enable-gtk-doc%{!?with_apidocs:=no} \
-	--enable-wayland \
-	--enable-x11 \
-	--disable-silent-rules \
-	%{?with_static_libs:--enable-static} \
-	--with-html-dir=%{_gtkdocdir}
+#! configure \
+#!	--enable-gtk-doc%{!?with_apidocs:=no} \
+#!	--enable-wayland \
+#!	--enable-x11 \
+#!	--disable-silent-rules \
+#!	%{?with_static_libs:--enable-static} \
+#!	--with-html-dir=%{_gtkdocdir}
 
-%{__make}
+%meson
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+%meson_install
 
 # removing docs
-%{!?with_apidocs:rm -rf $RPM_BUILD_ROOT%{_gtkdocdir}/libxfce4windowing}
-%{!?with_apidocs:rm -rf $RPM_BUILD_ROOT%{_gtkdocdir}/libxfce4windowingui}
+#%{!?with_apidocs:rm -rf $RPM_BUILD_ROOT%{_gtkdocdir}/libxfce4windowing}
+#%{!?with_apidocs:rm -rf $RPM_BUILD_ROOT%{_gtkdocdir}/libxfce4windowingui}
 
-# obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
+# removing static libs
+%{!?with_static_libs:rm -rf $RPM_BUILD_ROOT%{_libdir}/libxfce4windowing-0.a}
+%{!?with_static_libs:rm -rf $RPM_BUILD_ROOT%{_libdir}/libxfce4windowingui-0.a}
 
 # not supported by glibc (as of 2.32)
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ie
@@ -162,8 +159,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libxfce4windowing-0.so
 %{_libdir}/libxfce4windowingui-0.so
 %dir %{_includedir}/xfce4
-%{_includedir}/xfce4/libxfce4windowing
-%{_includedir}/xfce4/libxfce4windowingui
+%{_includedir}/xfce4/libxfce4windowing-0
 %{_pkgconfigdir}/libxfce4windowing-0.pc
 %{_pkgconfigdir}/libxfce4windowing-x11-0.pc
 %{_pkgconfigdir}/libxfce4windowingui-0.pc
@@ -177,9 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libxfce4windowingui-0.a
 %endif
 
-%if %{with apidocs}
-%files apidocs
-%defattr(644,root,root,755)
-%{_gtkdocdir}/libxfce4windowing
-%{_gtkdocdir}/libxfce4windowingui
-%endif
+#%if %{with apidocs}
+#%files apidocs
+#%defattr(644,root,root,755)
+#%{_gtkdocdir}/libxfce4windowing
+#%{_gtkdocdir}/libxfce4windowingui
+#%endif
