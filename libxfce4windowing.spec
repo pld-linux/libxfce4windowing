@@ -1,6 +1,5 @@
 #
 # Conditional build:
-# TODO - Fix apidocs
 %bcond_without  apidocs         # gtk-doc documentation
 %bcond_with     static_libs     # static library
 
@@ -13,6 +12,7 @@ License:	LGPL v2+
 Group:		Libraries
 Source0:	https://archive.xfce.org/src/xfce/libxfce4windowing/4.20/%{name}-%{version}.tar.bz2
 # Source0-md5:	4d075b3ddd7be02d91041ff90aa049a3
+Patch0:		%{name}-missing.patch
 URL:		https://docs.xfce.org/xfce/libxfce4windowing/start
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	gdk-pixbuf2-devel >= 2.42.8
@@ -21,16 +21,14 @@ BuildRequires:	glib2-devel >= 1:2.72.0
 BuildRequires:	gobject-introspection-devel >= 1.72.0
 BuildRequires:	gtk+3-devel >= 3.24.10
 %{?with_apidocs:BuildRequires:	gtk-doc >= 1.30}
-BuildRequires:	gtk-doc-automake >= 1.30
 BuildRequires:	libdisplay-info-devel >= 0.1.1
-BuildRequires:	libtool >= 2:2.4
 BuildRequires:	libwnck-devel >= 3.14
 BuildRequires:	meson >= 0.57.0
 BuildRequires:	ninja
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig >= 1:0.9.0
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.98
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	wayland-devel >= 1.20
 BuildRequires:	wayland-protocols >= 1.25
 BuildRequires:	xfce4-dev-tools >= 4.20.0
@@ -107,31 +105,21 @@ Dokumentacja API libxfce4util.
 
 %prep
 %setup -q
+%patch -P0 -p1
 
 %build
-#! configure \
-#!	--enable-gtk-doc%{!?with_apidocs:=no} \
-#!	--enable-wayland \
-#!	--enable-x11 \
-#!	--disable-silent-rules \
-#!	%{?with_static_libs:--enable-static} \
-#!	--with-html-dir=%{_gtkdocdir}
+%meson \
+	%{!?with_static_libs:--default-library=shared} \
+	%{?with_apidocs:-Dgtk-doc=true} \
+	-Dwayland=enabled \
+	-Dx11=enabled
 
-%meson
 %meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %meson_install
-
-# removing docs
-#%{!?with_apidocs:rm -rf $RPM_BUILD_ROOT%{_gtkdocdir}/libxfce4windowing}
-#%{!?with_apidocs:rm -rf $RPM_BUILD_ROOT%{_gtkdocdir}/libxfce4windowingui}
-
-# removing static libs
-%{!?with_static_libs:rm -rf $RPM_BUILD_ROOT%{_libdir}/libxfce4windowing-0.a}
-%{!?with_static_libs:rm -rf $RPM_BUILD_ROOT%{_libdir}/libxfce4windowingui-0.a}
 
 # not supported by glibc (as of 2.32)
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ie
@@ -173,9 +161,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libxfce4windowingui-0.a
 %endif
 
-#%if %{with apidocs}
-#%files apidocs
-#%defattr(644,root,root,755)
-#%{_gtkdocdir}/libxfce4windowing
-#%{_gtkdocdir}/libxfce4windowingui
-#%endif
+%if %{with apidocs}
+%files apidocs
+%defattr(644,root,root,755)
+%{_gtkdocdir}/libxfce4windowing-0
+%{_gtkdocdir}/libxfce4windowingui-0
+%endif
