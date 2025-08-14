@@ -27,8 +27,10 @@ BuildRequires:	meson >= 0.57.0
 BuildRequires:	ninja
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig >= 1:0.9.0
+BuildRequires:	python3 >= 1:3
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 2.042
+BuildRequires:	vala
 BuildRequires:	wayland-devel >= 1.20
 BuildRequires:	wayland-protocols >= 1.25
 BuildRequires:	xfce4-dev-tools >= 4.20.0
@@ -71,6 +73,12 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.72.0
 Requires:	gtk+3-devel >= 3.24.10
+Requires:	libdisplay-info-devel >= 0.1.1
+Requires:	libwnck-devel >= 3.14
+Requires:	wayland-devel >= 1.20
+Requires:	wayland-protocols >= 1.25
+Requires:	xorg-lib-libX11-devel >= 1.6.7
+Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 
 %description devel
 Development files for the libxfce4windowing library.
@@ -89,6 +97,20 @@ Static libxfce4util library.
 
 %description static -l pl.UTF-8
 Statyczna biblioteka libxfce4util.
+
+%package -n vala-libxfce4windowing
+Summary:	Vala API for libxfce4windowing libraries
+Summary(pl.UTF-8):	API języka Vala do bibliotek libxfce4windowing
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	vala
+BuildArch:	noarch
+
+%description -n vala-libxfce4windowing
+Vala API for libxfce4windowing libraries.
+
+%description -n vala-libxfce4windowing -l pl.UTF-8
+API języka Vala do bibliotek libxfce4windowing.
 
 %package apidocs
 Summary:	libxfce4windowing API documentation
@@ -160,6 +182,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libxfce4windowing-0.a
 %{_libdir}/libxfce4windowingui-0.a
 %endif
+
+%files -n vala-libxfce4windowing
+%defattr(644,root,root,755)
+%{_datadir}/vala/vapi/libxfce4windowing-0.deps
+%{_datadir}/vala/vapi/libxfce4windowing-0.vapi
+%{_datadir}/vala/vapi/libxfce4windowingui-0.deps
+%{_datadir}/vala/vapi/libxfce4windowingui-0.vapi
 
 %if %{with apidocs}
 %files apidocs
