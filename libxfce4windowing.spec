@@ -6,12 +6,12 @@
 Summary:	Windowing concept abstraction library for X11 and Wayland
 Summary(pl.UTF-8):	Biblioteka abstrakcji koncepcji okien dla X11 i Wayland
 Name:		libxfce4windowing
-Version:	4.20.3
-Release:	2
+Version:	4.20.4
+Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://archive.xfce.org/src/xfce/libxfce4windowing/4.20/%{name}-%{version}.tar.bz2
-# Source0-md5:	4d075b3ddd7be02d91041ff90aa049a3
+# Source0-md5:	b27e6ebf153fbca5184147b6d3775762
 Patch0:		%{name}-missing.patch
 URL:		https://docs.xfce.org/xfce/libxfce4windowing/start
 BuildRequires:	docbook-dtd412-xml
