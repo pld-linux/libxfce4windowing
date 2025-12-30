@@ -6,13 +6,12 @@
 Summary:	Windowing concept abstraction library for X11 and Wayland
 Summary(pl.UTF-8):	Biblioteka abstrakcji koncepcji okien dla X11 i Wayland
 Name:		libxfce4windowing
-Version:	4.20.4
+Version:	4.20.5
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://archive.xfce.org/src/xfce/libxfce4windowing/4.20/%{name}-%{version}.tar.bz2
-# Source0-md5:	b27e6ebf153fbca5184147b6d3775762
-Patch0:		%{name}-missing.patch
+# Source0-md5:	da6aa695900aded40735cd5fd9907f41
 URL:		https://docs.xfce.org/xfce/libxfce4windowing/start
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	gdk-pixbuf2-devel >= 2.42.8
@@ -127,7 +126,6 @@ Dokumentacja API libxfce4util.
 
 %prep
 %setup -q
-%patch -P0 -p1
 
 %build
 %meson \
@@ -157,9 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc NEWS README.md
-%attr(755,root,root) %{_libdir}/libxfce4windowing-0.so.*.*.*
+%{_libdir}/libxfce4windowing-0.so.*.*.*
 %ghost %{_libdir}/libxfce4windowing-0.so.0
-%attr(755,root,root) %{_libdir}/libxfce4windowingui-0.so.*.*.*
+%{_libdir}/libxfce4windowingui-0.so.*.*.*
 %ghost %{_libdir}/libxfce4windowingui-0.so.0
 %{_libdir}/girepository-1.0/Libxfce4windowing-0.0.typelib
 %{_libdir}/girepository-1.0/Libxfce4windowingui-0.0.typelib
